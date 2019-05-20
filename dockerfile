@@ -3,7 +3,6 @@ ENV USER=root
 ENV PASSWORD=password1
 ENV DEBIAN_FRONTEND=noninteractive 
 ENV DEBCONF_NONINTERACTIVE_SEEN=true
-# COPY keen /dos/keen
 RUN apt-get update && \
 	echo "tzdata tzdata/Areas select America" > ~/tx.txt && \
 	echo "tzdata tzdata/Zones/America select New York" >> ~/tx.txt && \
@@ -19,5 +18,6 @@ RUN apt-get update && \
 	cp $DOSCONF ~/.dosbox/dosbox.conf && \
 	sed -i 's/usescancodes=true/usescancodes=false/' ~/.dosbox/dosbox.conf && \
 	openssl req -x509 -nodes -newkey rsa:2048 -keyout ~/novnc.pem -out ~/novnc.pem -days 3650 -subj "/C=US/ST=NY/L=NY/O=NY/OU=NY/CN=NY emailAddress=email@example.com"
+COPY games /dos/games
 EXPOSE 80
 CMD vncserver && websockify -D --web=/usr/share/novnc/ --cert=~/novnc.pem 80 localhost:5901 && tail -f /dev/null
